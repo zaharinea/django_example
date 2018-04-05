@@ -1,0 +1,24 @@
+<head>
+<style>
+table, th, td {
+    border: 1px solid black;
+}
+</style>
+</head>
+
+<table align="center" cellpadding="10">
+<tr>
+  <th>date_in</th>
+  <th>date_out</th>
+  <th>room</th>
+  <th>client</th>
+</tr>
+{% for order in orders %}
+<tr>
+  <td> {{ order.date_in | date:"d.m.y" }}</td>
+  <td> {{ order.date_out | date:"d.m.y" }}</td>
+  <td> {{ order.room }}</td>
+  <td> {{ order.client }}</td>
+</tr>
+{% endfor %}
+</table>

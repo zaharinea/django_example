@@ -1,20 +1,24 @@
 import datetime
+import json
 
 from django.shortcuts import render
-from django.http import HttpResponse
-from django.db.models import Q
+from django.http import JsonResponse
 
-from .models import Order
+from .models import Order, Room
 
 
-def index(request):
-    return HttpResponse("Hello, world. You're at the polls index.")
-
-def available_rooms(request, year, month, day):
+def current_orders(request, year, month, day):
     target_date = datetime.date(year=year, month=month, day=day)
-    orders = Order.objects.filter(date_in__lte=target_date, date_out__gte=target_date)
-    ord_ids = [str(order.id) for order in orders]
-    res = '\n'.join(ord_ids)
+    current_orders = Order.objects.filter(date_in__lte=target_date,
+                                          date_out__gte=target_date)
+    context = {'orders': current_orders}
 
-    result = '{}/{}/{}'.format(year, month, day)
-    return HttpResponse(res)
+    return render(request, 'booking/current_orders.html', context)
+
+def create_room(request):
+    r = json.loads(request.body.decode("utf-8"))
+    room = Room(number=r['number'], price=r['price'])
+    room.save()
+
+
+    return JsonResponse(room.__dict__)

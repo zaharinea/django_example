@@ -7,8 +7,9 @@ from . import views
 
 router = routers.DefaultRouter()
 router.register(r'room', views.RoomViewSet)
+router.register(r'order', views.OrderViewSet)
 
-schema_view = get_schema_view(title='Pastebin API')
+schema_view = get_schema_view(title='Booking API')
 
 urlpatterns = [
     path('', include(router.urls)),

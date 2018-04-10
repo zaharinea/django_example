@@ -7,6 +7,7 @@ from . import views
 
 router = routers.DefaultRouter()
 router.register(r'room', views.RoomViewSet)
+router.register(r'client', views.ClientViewSet)
 router.register(r'order', views.OrderViewSet)
 
 schema_view = get_schema_view(title='Booking API')

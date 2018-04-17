@@ -1,0 +1,35 @@
+version: '3'
+
+services:
+  db:
+    image: postgres:9.6
+    ports:
+      - "127.0.0.1:5432:5432"
+    restart: always
+    environment:
+      - TZ=Europe/Moscow
+      - POSTGRES_DB=django_example
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=P@ssw0rd
+    volumes:
+      - 'pgdata:/var/lib/postgresql/data/'
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+  web:
+#    build: .
+    image: zaharinea/django_example:develop
+    ports:
+      - "0.0.0.0:8000:8000"
+    restart: always
+    environment:
+      - TZ=Europe/Moscow
+      - APP_ENV=dev
+      - DJANGO_SETTINGS_MODULE=my_web_app.settings
+      - DATABASE_URL=postgres://postgres:P@ssw0rd@db:5432/django_example
+    depends_on:
+      - db
+volumes:
+  pgdata:

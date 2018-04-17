@@ -16,8 +16,8 @@ python manage.py collectstatic --noinput
 # Start server
 if [ "$APP_ENV" = 'dev' ]
 then
-    echo "Load fixture"
-    python manage.py loaddata fixtures/dump.json
+#    echo "Load fixture"
+#    python manage.py loaddata fixtures/dump.json
 
     echo "Running Development Server"
     exec python manage.py runserver 0.0.0.0:8000

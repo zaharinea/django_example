@@ -10,11 +10,7 @@
 ## Развертывание приложения
   - Развернуть Postgresql
   - [Только для PROD окружения] Установить следующие переменные окружения 
-      - `DB_HOST` - IP адрес сервера с БД
-      - `DB_PORT` - порт, на котором работает Postgresql
-      - `DB_NAME` - имя БД
-      - `DB_USER` - пользовательв БД
-      - `DB_PASSWORD` - пароль от БД
+      - `DATABASE_URL` - строка подключения к СУБД в формате URI
       - `DJANGO_SETTINGS_MODULE=my_web_app.settings_prod` - файл конфигурации Django (различные для dev и prod окружения)
   - Клонировать проект `git clone https://github.com/krtvand/django_example.git`
   - Перейти в папку проекта `cd django_example`
@@ -27,4 +23,14 @@
   - [Опионально] запустить приложение `python3 manage.py runserver 0:8000`
   
   
+ ## Развертываение в Docker
+ ```
+docker build -t django_example .
+
+docker run -d --name django -p 8000:8000  \
+    -e DJANGO_SETTINGS_MODULE=my_web_app.settings_prod \
+    -e DATABASE_URL=postgres://user:password@hostname:5432/django_example \
+    --restart=always django_example
+
+```
  

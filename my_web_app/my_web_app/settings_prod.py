@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
 import os
+import dj_database_url
 
 from django.core.exceptions import ImproperlyConfigured
 
@@ -32,7 +33,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '!-fv-8y!cx=!i+_srkz0ke$p1a!kq#tw440pdu%c@hg4$$q*ar'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -92,23 +93,8 @@ TEMPLATES = [
 WSGI_APPLICATION = 'my_web_app.wsgi.application'
 
 
-# Database
-# https://docs.djangoproject.com/en/2.0/ref/settings/#databases
-_db_host = os.getenv('DB_HOST', 'localhost')
-_db_port = os.getenv('DB_PORT', 5432)
-_db_name = _require_env('DB_NAME')
-_db_user = _require_env('DB_USER')
-_db_password = _require_env('DB_PASSWORD')
-
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': _db_name,
-        'HOST': _db_host,
-        'PORT': _db_port,
-        'USER': _db_user,
-        'PASSWORD': _db_password,
-    }
+    'default': dj_database_url.config()
 }
 
 # Password validation
@@ -148,3 +134,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+# Media
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
+

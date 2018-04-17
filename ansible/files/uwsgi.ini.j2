@@ -1,0 +1,14 @@
+[uwsgi]
+socket = 0.0.0.0:8000
+uid = {{ app_user }}
+gid = {{ app_user }}
+chdir = {{ app_workdir }}/{{ app_name }}
+module = {{ app_name }}.wsgi:application
+pidfile=/var/run/uwsgi.pid
+virtualenv = {{ app_workdir }}/env
+python-path = {{ app_workdir }}/env
+master = true
+process = 4
+vacuum = true
+env = DJANGO_SETTINGS_MODULE={{ app_name }}.settings_prod
+env = DATABASE_URL= {{ db }}

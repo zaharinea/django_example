@@ -1,0 +1,66 @@
+- hosts: "web"
+  vars:
+    app_name: "my_web_app"
+    app_workdir: "/opt/django"
+    app_user: "wsgi"
+    db: "postgres://user:pass@hostname:5432/django_example"
+  tasks:
+    - name: Install python 3.6
+      become: yes
+      apt: pkg={{item}} state=present
+      with_items:
+        - python3.6
+        - python3.6-dev
+        - python3.6-venv
+        - nginx
+
+    - name: Create service user
+      become: yes
+      user:
+        name: "{{app_user}}"
+        state: present
+        shell: /bin/false
+        system: yes
+        createhome: yes
+        home: "{{app_workdir}}"
+
+    - name: Create workdir {{app_workdir}}
+      become: yes
+      file:
+        path: "{{app_workdir}}"
+        state: directory
+        owner: "{{app_user}}"
+        group: "{{app_user}}"
+        mode: 0755
+
+    - name: Copy application files
+      become: yes
+      copy:
+        src: "../{{app_name}}"
+        dest: "{{app_workdir}}"
+        owner: "{{app_user}}"
+        group: "{{app_user}}"
+        mode: 0644
+
+    - template:
+        src: files/uwsgi.ini.j2
+        dest: "{{app_workdir}}/{{app_name}}/uwsgi.ini"
+        owner: "{{app_user}}"
+        group: "{{app_user}}"
+        mode: 0644
+
+    - name: Copy requirements.txt
+      become: yes
+      copy:
+        src: "../requirements.txt"
+        dest: "{{app_workdir}}/requirements.txt"
+        owner: "{{app_user}}"
+        group: "{{app_user}}"
+        mode: 0644
+
+    - name: Install requirements
+      become: yes
+      pip:
+        requirements: "{{app_workdir}}/requirements.txt"
+        virtualenv: "{{app_workdir}}/env"
+        virtualenv_command: /usr/bin/python3.6 -m venv
